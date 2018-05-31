@@ -3,7 +3,7 @@
  * Plugin Name: Robot pages
  * Description: This plugin adds a custom post type for robots and generates navigation.
  * Version: 2.0.0
- * Author: Jared Tulayan
+ * Author: Tim Aveni, Jared Tulayan
  * License: X11
  */
 
@@ -35,12 +35,13 @@ function robot_pages_create_post_type() {
 }
 
 /**
- * Custom edit thing for columns
+ * Add custom columns to robot pages admin display
  */
 function set_custom_edit_robot_columns( $columns ) {
   $date = $columns['date'];
   unset( $columns['date'] );
 
+  $columns['title'] = __( 'Robot Name' );
   $columns['game'] = __( 'Game Name' );
   $columns['year'] = __( 'Year' );
 
@@ -50,7 +51,7 @@ function set_custom_edit_robot_columns( $columns ) {
 }
 
 /**
- * More custom thing
+ * Display values in custom columns
  */
 function custom_robot_column( $column, $post_id ) {
   switch ( $column ) {
@@ -67,7 +68,7 @@ function custom_robot_column( $column, $post_id ) {
 }
 
 /**
- * Allow for sort by columns
+ * Allow for sort by custom columns
  */
 function set_custom_robot_sortable_columns( $columns ) {
 	$columns['game'] = 'game';
@@ -249,5 +250,4 @@ add_action( 'pre_get_posts', 'robot_custom_orderby' );
 
 add_filter( 'manage_robot_posts_columns', 'set_custom_edit_robot_columns' );
 add_filter( 'manage_edit-robot_sortable_columns', 'set_custom_robot_sortable_columns' );
-
 ?>
