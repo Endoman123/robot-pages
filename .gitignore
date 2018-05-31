@@ -1,0 +1,15 @@
+# Wordpress Stuff
+*.zip
+*.s*ssc
+.vscode/
+.sass-cache/
+
+# Config stuff
+*.json
+
+# Gradle
+.gradle/
+gradle/.launch/
+
+# Easy uncheck via /.*/
+**/.*/
