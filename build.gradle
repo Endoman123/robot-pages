@@ -1,0 +1,24 @@
+apply plugin: 'java'
+apply plugin: 'com.github.fgiannesini.libsass.gradle.plugin'
+
+buildscript {
+    repositories {
+    	mavenLocal()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.github.fgiannesini.libsass.gradle.plugin:libsass-gradle-plugin:+'
+    }
+}
+
+libSassParameters {
+    inputFilePath = "sass/style.sass"
+    outputFilePath = "robot-pages.css"
+    watchedDirectoryPath = "sass"
+    sourceMapFilePath "style.css.map"
+    includePaths "sass/partials"
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.7'
+}

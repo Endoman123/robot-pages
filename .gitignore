@@ -11,5 +11,9 @@
 .gradle/
 gradle/.launch/
 
-# Easy uncheck via /.*/
-**/.*/
+# Easy uncheck via .*
+.*/
+**/.*
+
+# Don't ignore .gitignore
+-.gitignore
