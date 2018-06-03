@@ -16,13 +16,12 @@ function robot_pages_create_post_type() {
 			'description' => 'A robot, possibly with an associated reveal video.',
 			'public' => true,
 			'menu_position' => 20,	// below pages, above comments
-			'menu_icon' => plugins_url('/mammoth-white.png', __FILE__),
+			'menu_icon' => plugins_url( '/mammoth-white.png', __FILE__ ),
 			'capability_type' => 'page',
 			'supports' => array(
 				'title',
-				'editor',
 				'revisions',
-                'thumbnail'
+				'thumbnail'
 			),
 			'rewrite' => array(
 				'slug' => 'robot',
@@ -104,7 +103,7 @@ function robot_custom_orderby( $query ) {
  */
 function enqueue_image_mgmt() {
 	global $typenow;
-    if( $typenow == 'robot' ) {
+    if ( $typenow == 'robot' ) {
 		wp_enqueue_media();
 
 		// Registers and enqueues the required javascript.
@@ -127,12 +126,11 @@ function robot_pages_admin_init() {
 	wp_enqueue_style('robot-pages');
 }
 
-// Add custom fields to the robot editor page
+// Add custom meta boxes
 // hook: admin_menu
 function robot_pages_create_custom_fields() {
-	add_meta_box('robot_season_meta', 'Season', 'render_robot_season_meta', 'robot', 'side');
-	add_meta_box('robot_youtube_meta', 'YouTube Video ID', 'render_robot_youtube_meta', 'robot', 'side');
-    add_meta_box('robot_icon_meta', 'Icon', 'render_robot_icon_meta', 'robot', 'side');
+	add_meta_box('robot_youtube_meta', 'Robot Info', 'render_robot_youtube_meta', 'robot', 'normal', 'high');
+	add_meta_box('robot_season_meta', 'Season Info', 'render_robot_season_meta', 'robot', 'normal', 'high');
 }
 
 // Render the robot year custom box
@@ -141,58 +139,59 @@ function render_robot_season_meta($post) {
 	
 	$year = get_post_meta( $post->ID, 'robot-year-meta', true );
     $game = get_post_meta( $post->ID, 'robot-game-meta', true );
-    
 
 	?>
-		<label for="robot_pages_year_field">Year of the competition season for this robot:</label>
+		<label for="robot_pages_year_field">Season Year:</label>
 		<br>
 		<input type="text" id="robot_pages_year_field" name="robot_pages_year_field" value="<?php echo esc_attr( $year )?>" size="4" />
         <br>
         <br>
-        <label for="robot_pages_game_field">Name of the competition season's game:</label>
+        <label for="robot_pages_game_field">Season Name:</label>
 		<br>
 		<input type="text" id="robot_pages_game_field" name="robot_pages_game_field" value="<?php echo esc_attr( trim( $game ) )?>"/>
+		<br>
+		<label for="robot_season">Season Description:</label>
 	<?php
+		wp_editor('', 'robot_season', array(
+			'media_buttons' => false,
+			'teeny' => true,
+			'textarea_rows' => 10
+		));
 }
 
 // Render the robot YouTube URL custom box
 function render_robot_youtube_meta($post) {
 	wp_nonce_field('robot_pages_save_meta_boxes', 'robot_pages_robot_youtube_nonce');
 	
-	$value = get_post_meta( $post->ID, 'robot-youtube-meta', true );
+	$yt_val = get_post_meta( $post->ID, 'robot-youtube-meta', true );
+	$icon_val = get_post_meta( $post->ID, 'robot-icon-meta', true );
 
 	?>
-		<label for="robot_pages_youtube_field">
-			YouTube video ID of this robot's reveal video (optional). <br>
-			You can find this in the URL of the YouTube video, past "https://youtube.com/watch?v=".
-		</label>
+		<p>Robot Reveal Video ID (Optional)</p>
+		<label for="robot_pages_youtube_field">https://youtube.com/watch?v=</label>
+		<input type="text" id="robot_pages_youtube_field" name="robot_pages_youtube_field" value="<?php echo esc_attr( trim( $yt_val ) ) ?>"/>
+
+		<?php if ( wp_script_is( 'meta-box-image', 'done' ) ) { ?>
 		<br>
-		<input type="text" id="robot_pages_youtube_field" name="robot_pages_youtube_field" value="<?php echo esc_attr( trim( $value ) ) ?>"/>
-	<?php
+		<label for="robot_pages_icon_field" class="prfx-row-title">
+				URL for icon to display in the robot list (512x512).<br>
+				You can copy this URL from an uploaded media file
+			</label>
+			<input type="text" id="robot_pages_icon_field" name="robot_pages_icon_field" value="<?php echo esc_attr( trim( $icon_val ) ) ?>"/>
+		<input type="button" id="robot_pages_icon_button" class="button" value="..."/>
+		<?php }
 }
 
 // Render the robot icon custom box
 function render_robot_icon_meta($post) {
 	wp_nonce_field('robot_pages_save_meta_boxes', 'robot_pages_robot_icon_nonce');
-	
-	$value = get_post_meta( $post->ID, 'robot-icon-meta', true );
-	
-	if ( wp_script_is( 'meta-box-image', 'done' ) ) {
-		?>
-			<label for="robot_pages_icon_field" class="prfx-row-title">
-                URL for icon to display in the robot list (512x512).<br>
-                You can copy this URL from an uploaded media file</label>
-			<input type="text" id="robot_pages_icon_field" name="robot_pages_icon_field" value="<?php echo esc_attr( trim( $value ) ) ?>"/>
-			<input type="button" id="robot_pages_icon_button" class="button" value="Choose or Upload an Image"/>
-		<?php
-	}
+
 }
 
 // Save the robot's custom fields when the post is saved.
 // hook: save_post
 function robot_pages_save_custom_fields($postID, $post, $update) {
-    // Nonce helps to verify if the edit has not been made yet
-    // This exists purely for security reasons
+    // Nonce helps to verify if the edit has been made in the admin field
 	if (!isset($_POST['robot_pages_robot_season_nonce']) || !wp_verify_nonce($_POST['robot_pages_robot_season_nonce'], 'robot_pages_save_meta_boxes'))
 		return;
     
@@ -246,8 +245,8 @@ add_action('admin_menu', 'robot_pages_create_custom_fields');
 add_action('admin_enqueue_scripts', 'enqueue_image_mgmt');
 add_action('save_post', 'robot_pages_save_custom_fields', 1, 3);
 add_action('manage_robot_posts_custom_column' , 'custom_robot_column', 10, 2 );
-add_action( 'pre_get_posts', 'robot_custom_orderby' );
+add_action('pre_get_posts', 'robot_custom_orderby');
 
-add_filter( 'manage_robot_posts_columns', 'set_custom_edit_robot_columns' );
-add_filter( 'manage_edit-robot_sortable_columns', 'set_custom_robot_sortable_columns' );
+add_filter('manage_robot_posts_columns', 'set_custom_edit_robot_columns');
+add_filter('manage_edit-robot_sortable_columns', 'set_custom_robot_sortable_columns');
 ?>

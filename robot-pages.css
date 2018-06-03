@@ -1,29 +1,24 @@
 #adminmenu .menu-icon-robot img {
-	opacity: 1;
-	padding: 0;
-}
+  padding: 0; }
 
-#prfx_meta{
-    overflow: hidden;
-    padding-bottom: 1em;
-}
- 
-#prfx_meta p{
-    clear: both;
-}
- 
+#prfx_meta {
+  overflow: hidden;
+  padding-bottom: 1em; }
+
+#prfx_meta p {
+  clear: both; }
+
 .prfx-row-title {
-    display: block;
-    float: left;
-    width: 200px;
-}
- 
+  display: block;
+  width: 200px;
+  margin: 1em 0 0.5em; }
+
 .prfx-row-content {
-    float: left;
-    padding-bottom: 1em;
-}
- 
+  float: left;
+  padding-bottom: 1em; }
+
 .prfx-row-content label {
-    display: block;
-    line-height: 1.75em;
-}
+  display: block;
+  line-height: 1.75em; }
+
+/*# sourceMappingURL=style.css.map */
