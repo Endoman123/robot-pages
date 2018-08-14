@@ -151,20 +151,20 @@ function render_robot_season_meta($post) {
 	$seasonDesc = wpautop( get_post_meta( $post->ID, 'robot-season-desc-meta', true ) );
 
 	?>
-		<div class="robotpage-meta__container">
-			<section class="robotpage-meta__section">
-				<p class="robotpage-meta-section__title">Season Year</p>
-				<p class="robotpage-meta-section__tip">Year of competition season.</p>
+		<div class="robotpage-metabox">
+			<section class="robotpage-metabox__section">
+				<p class="robotpage-metabox__title">Season Year</p>
+				<p class="robotpage-metabox__tip">Year of competition season.</p>
 				<input type="number" id="robot_pages_year_field" name="robot_pages_year_field" minlength="4" maxlength="4" size="4" min="2000" required value="<?php echo esc_attr( $year )?>"/>
 			</section>
-			<section class="robotpage-meta__section">
-				<p class="robotpage-meta-section__title">Season Name</p>
-				<p class="robotpage-meta-section__tip">Name of FRC game. Omit <i>FIRST</i>.</p>
+			<section class="robotpage-metabox__section">
+				<p class="robotpage-metabox__title">Season Name</p>
+				<p class="robotpage-metabox__tip">Name of FRC game. Omit <i>FIRST</i>.</p>
 				<input type="text" id="robot_pages_game_field" name="robot_pages_game_field" required value="<?php echo esc_attr( trim( $game ) )?>"/>
 			</section>
-			<section class="robotpage-meta__section">
-				<p class="robotpage-meta-section__title">Game Reveal Video ID</p>
-				<p class="robotpage-meta-section__tip">Copy from YouTube video URL, after ".../watch?v="</p>
+			<section class="robotpage-metabox__section">
+				<p class="robotpage-metabox__title">Game Reveal Video ID</p>
+				<p class="robotpage-metabox__tip">Copy from YouTube video URL, after ".../watch?v="</p>
 				<input type="text" id="robot_pages_game_reveal_field" name="robot_pages_game_reveal_field" required value="<?php echo esc_attr( trim( $reveal ) ) ?>"/>
 			</section>
 		</div>
@@ -185,18 +185,18 @@ function render_robot_media_meta($post) {
 	$icon = get_post_meta( $post->ID, 'robot-icon-meta', true );
 
 	?>
-		<div class="robotpage-meta__container">
-			<section class="robotpage-meta__section">
-				<p class="robotpage-meta-section__title">Robot Reveal Video ID (Optional)</p>
-				<p class="robotpage-meta-section__tip">Copy from YouTube video URL, after ".../watch?v="</p>
+		<div class="robotpage-metabox">
+			<section class="robotpage-metabox__section">
+				<p class="robotpage-metabox__title">Robot Reveal Video ID (Optional)</p>
+				<p class="robotpage-metabox__tip">Copy from YouTube video URL, after ".../watch?v="</p>
 				<input type="text" id="robot_pages_robot_reveal_field" name="robot_pages_robot_reveal_field" value="<?php echo esc_attr( trim( $reveal ) ) ?>"/>
 			</section>
 	<?php if ( wp_script_is( 'meta-box-image', 'done' ) ) { ?>
-			<section class="robotpage-meta__section">
-				<p class="robotpage-meta-section__title">
+			<section class="robotpage-metabox__section">
+				<p class="robotpage-metabox__title">
 					Robot Icon (Optional)
 				</p>
-				<p class="robotpage-meta-section__tip">
+				<p class="robotpage-metabox-section__tip">
 					Icon to display in robot archive. Optional, but recommended.<br>
 					For best results, look for 512×512 images.
 				</p>
@@ -218,10 +218,10 @@ function render_robot_info_meta($post) {
 	$height = get_post_meta($post->ID, 'robot-height-meta', true);
 	$weight = get_post_meta($post->ID, 'robot-weight-meta', true);
 ?>
-	<div class="robotpage-meta__container">
-		<section class="robotpage-meta__section">
-			<p class="robotpage-meta-section__title">Current Robot Status</p>
-			<p class="robotpage-meta-section__tip">
+	<div class="robotpage-metabox">
+		<section class="robotpage-metabox__section">
+			<p class="robotpage-metabox__title">Current Robot Status</p>
+			<p class="robotpage-metabox__tip">
 				Active: Currently being used in competition, either in-season or off-season.<br>
 				Showbot: Only used in parades, team demos, etc.<br>
 				Inactive: In storage, but not disassembled.<br>
@@ -234,9 +234,9 @@ function render_robot_info_meta($post) {
 				<option value="disassembled" <?php selected( $status, 'disassembled' ); ?>>Disassembled</option>
 			</select>
 		</section>
-		<section class="robotpage-meta__section">
-			<p class="robotpage-meta-section__title">Robot Dimensions</p>
-			<p class="robotpage-meta-section__tip">
+		<section class="robotpage-metaboxbox__section">
+			<p class="robotpage-metabox__title">Robot Dimensions</p>
+			<p class="robotpage-metabox__tip">
 				Transport dimensions of robot, in inches, from bumper to bumper, and from the bottom of the drivetrain to the top of the robot.<br>
 				Max dimensions: 50" × 50" × 100"
 			</p>
@@ -246,9 +246,9 @@ function render_robot_info_meta($post) {
 			×
 			<input type="number" id="robot_pages_height_field" name="robot_pages_height_field" maxlength="3" size="3" min="1" max="100" placeholder="H" required value="<?php echo esc_attr( trim( $height ) ) ?>"/>
 		</section>
-		<section class="robotpage-meta__section">
-			<p class="robotpage-meta-section__title">Robot Weight</p>
-			<p class="robotpage-meta-section__tip">Weight of robot, in pounds, including bumpers.</p>
+		<section class="robotpage-metabox__section">
+			<p class="robotpage-metabox__title">Robot Weight</p>
+			<p class="robotpage-metabox__tip">Weight of robot, in pounds, including bumpers.</p>
 			<input type="number" id="robot_pages_weight_field" name="robot_pages_weight_field" maxlength="3" size="3" min="1" max="200" required value="<?php echo esc_attr( trim( $weight ) ) ?>"> lbs.</input>
 		</section>
 	</div>
