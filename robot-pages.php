@@ -167,19 +167,24 @@ function render_robot_youtube_meta($post) {
 	$icon_val = get_post_meta( $post->ID, 'robot-icon-meta', true );
 
 	?>
-		<p>Robot Reveal Video ID (Optional)</p>
-		<label for="robot_pages_youtube_field">https://youtube.com/watch?v=</label>
-		<input type="text" id="robot_pages_youtube_field" name="robot_pages_youtube_field" value="<?php echo esc_attr( trim( $yt_val ) ) ?>"/>
-
-		<?php if ( wp_script_is( 'meta-box-image', 'done' ) ) { ?>
-		<br>
-		<label for="robot_pages_icon_field" class="prfx-row-title">
-				URL for icon to display in the robot list (512x512).<br>
-				You can copy this URL from an uploaded media file
-			</label>
+		<div class="robotpage-meta__container">
+		<section class="robotpage-meta__section">
+			<p class="robotpage-meta-section__title">Robot Reveal Video ID (Optional)</p>
+			<p class="robotpage-meta-section__tip">Copy from YouTube video URL, after ".../watch?v="</p>
+			<input type="text" id="robot_pages_youtube_field" name="robot_pages_youtube_field" value="<?php echo esc_attr( trim( $yt_val ) ) ?>"/>
+		</section>
+	<?php if ( wp_script_is( 'meta-box-image', 'done' ) ) { ?>
+		<section class="robotpage-meta__section">
+			<p class="robotpage-meta-section__title">
+				Robot Icon (512x512)
+			</p>
+			<p class="robotpage-meta-section__tip">You can copy this URL from an uploaded media file</p>
 			<input type="text" id="robot_pages_icon_field" name="robot_pages_icon_field" value="<?php echo esc_attr( trim( $icon_val ) ) ?>"/>
-		<input type="button" id="robot_pages_icon_button" class="button" value="..."/>
-		<?php }
+			<input type="button" id="robot_pages_icon_button" class="button" value="..."/>
+		</section>
+	<?php } ?>
+		</div>
+	<?php
 }
 
 // Render the robot icon custom box

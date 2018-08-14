@@ -1,6 +1,21 @@
 #adminmenu .menu-icon-robot img {
   padding: 0; }
 
+.robotpage-meta__container {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-gap: 1.5em 1em; }
+
+.robotpage-meta__section:not(:last-child) {
+  margin-bottom: 1.75em; }
+
+.robotpage-meta-section__title {
+  font-weight: 600;
+  margin: 1em 0 0.5em; }
+
+.robotpage-meta-section__tip {
+  margin: 0.5em 0; }
+
 #prfx_meta {
   overflow: hidden;
   padding-bottom: 1em; }
