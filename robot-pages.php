@@ -147,7 +147,8 @@ function render_robot_season_meta($post) {
 	
 	$year = get_post_meta( $post->ID, 'robot-year-meta', true );
 	$game = get_post_meta( $post->ID, 'robot-game-meta', true );
-	$seasonDesc = wpautop( get_post_meta( $post->ID, 'robot-season-meta', true ) );
+	$reveal = get_post_meta( $post->ID, 'robot-game-reveal-meta', true );
+	$seasonDesc = wpautop( get_post_meta( $post->ID, 'robot-season-desc-meta', true ) );
 
 	?>
 		<div class="robotpage-meta__container">
@@ -159,20 +160,20 @@ function render_robot_season_meta($post) {
 			<section class="robotpage-meta__section">
 				<p class="robotpage-meta-section__title">Season Name</p>
 				<p class="robotpage-meta-section__tip">Name of FRC game. Omit <i>FIRST</i>.</p>
-				<input type="number" id="robot_pages_game_field" name="robot_pages_game_field" required value="<?php echo esc_attr( trim( $game ) )?>"/>
+				<input type="text" id="robot_pages_game_field" name="robot_pages_game_field" required value="<?php echo esc_attr( trim( $game ) )?>"/>
 			</section>
 			<section class="robotpage-meta__section">
 				<p class="robotpage-meta-section__title">Game Reveal Video ID</p>
 				<p class="robotpage-meta-section__tip">Copy from YouTube video URL, after ".../watch?v="</p>
-				<input type="text" id="robot_pages_youtube_field" name="robot_pages_youtube_field" required value="<?php echo esc_attr( trim( $yt_val ) ) ?>"/>
+				<input type="text" id="robot_pages_game_reveal_field" name="robot_pages_game_reveal_field" required value="<?php echo esc_attr( trim( $reveal ) ) ?>"/>
 			</section>
 		</div>
 	<?php
-		wp_editor($seasonDesc, 'robot_pages_season_field', array(
+		wp_editor($seasonDesc, 'robot_pages_season_desc_field', array(
 			'media_buttons' => false,
 			'teeny' => true,
 			'textarea_rows' => 10,
-			'textarea_name' => 'robot_pages_season_field'
+			'textarea_name' => 'robot_pages_season_desc_field'
 		));
 }
 
@@ -180,15 +181,15 @@ function render_robot_season_meta($post) {
 function render_robot_media_meta($post) {
 	wp_nonce_field('robot_pages_save_meta_boxes', 'robot_pages_robot_media_nonce');
 	
-	$yt_val = get_post_meta( $post->ID, 'robot-youtube-meta', true );
-	$icon_val = get_post_meta( $post->ID, 'robot-icon-meta', true );
+	$reveal = get_post_meta( $post->ID, 'robot-robot-reveal-meta', true );
+	$icon = get_post_meta( $post->ID, 'robot-icon-meta', true );
 
 	?>
 		<div class="robotpage-meta__container">
 			<section class="robotpage-meta__section">
 				<p class="robotpage-meta-section__title">Robot Reveal Video ID (Optional)</p>
 				<p class="robotpage-meta-section__tip">Copy from YouTube video URL, after ".../watch?v="</p>
-				<input type="text" id="robot_pages_youtube_field" name="robot_pages_youtube_field" value="<?php echo esc_attr( trim( $yt_val ) ) ?>"/>
+				<input type="text" id="robot_pages_robot_reveal_field" name="robot_pages_robot_reveal_field" value="<?php echo esc_attr( trim( $reveal ) ) ?>"/>
 			</section>
 	<?php if ( wp_script_is( 'meta-box-image', 'done' ) ) { ?>
 			<section class="robotpage-meta__section">
@@ -199,7 +200,7 @@ function render_robot_media_meta($post) {
 					Icon to display in robot archive. Optional, but recommended.<br>
 					For best results, look for 512×512 images.
 				</p>
-				<input type="text" id="robot_pages_icon_field" name="robot_pages_icon_field" value="<?php echo esc_attr( trim( $icon_val ) ) ?>"/>
+				<input type="text" id="robot_pages_icon_field" name="robot_pages_icon_field" value="<?php echo esc_attr( trim( $icon ) ) ?>"/>
 				<input type="button" id="robot_pages_icon_button" class="button" value="..."/>
 			</section>
 	<?php } ?>
@@ -210,6 +211,7 @@ function render_robot_media_meta($post) {
 // Render the robot info custom box
 function render_robot_info_meta($post) {
 	wp_nonce_field('robot_pages_save_meta_boxes', 'robot_pages_robot_info_nonce');
+
 	$status = get_post_meta($post->ID, 'robot-status-meta', true);
 	$length = get_post_meta($post->ID, 'robot-length-meta', true);
 	$width = get_post_meta($post->ID, 'robot-width-meta', true);
@@ -260,15 +262,15 @@ function robot_pages_verify_meta_nonce($nonce) {
 }
 
 // Write new value to meta key, or default if value is invalid
-function robot_pages_write_meta($key, $value, $default) {
+function robot_pages_write_meta(string $id, string $key, string $value, ?string $default) {
 	if (isset($value) && trim($value)) {
 		$meta = trim($value);
-		update_post_meta($postID, $key, $meta);
+		update_post_meta($id, $key, $meta);
 	} else {
-		if ($default === null)
-			delete_post_meta($postID, $key);
+		if ( !isset($default) )
+			delete_post_meta($id, $key);
 		else
-			update_post_meta($postID, $key, $default);
+			update_post_meta($id, $key, $default);
 	}
 }
 
@@ -295,41 +297,23 @@ function robot_pages_save_custom_fields($postID, $post, $update) {
 	if ($post->post_type !== 'robot')
 		return;
 
-    // Update post meta
-	if (isset($_POST['robot_pages_year_field']) && trim($_POST['robot_pages_year_field'])) {
-		$year = trim($_POST['robot_pages_year_field']);
-		update_post_meta($postID, 'robot-year-meta', intval($year));
-	} else {
-		delete_post_meta($postID, 'robot-year-meta');
-	}    
-    
-    if (isset($_POST['robot_pages_game_field']) && trim($_POST['robot_pages_game_field'])) {
-		$game = trim($_POST['robot_pages_game_field']);
-		update_post_meta( $postID, 'robot-game-meta',  $game );
-	} else {
-		delete_post_meta($postID, 'robot-game-meta');
-	}
+	// Update post meta
+	// Season meta
+	robot_pages_write_meta($postID, 'robot-year-meta', $_POST['robot_pages_year_field'], null);
+	robot_pages_write_meta($postID, 'robot-game-meta', $_POST['robot_pages_game_field'], null);
+	robot_pages_write_meta($postID, 'robot-game-reveal-meta', $_POST['robot_pages_game_reveal_field'], null);
+	robot_pages_write_meta($postID, 'robot-season-desc-meta', $_POST['robot_pages_season_desc_field'], null);   
 
-	if (isset($_POST['robot_pages_youtube_field']) && trim($_POST['robot_pages_youtube_field'])) {
-		$youtube = trim($_POST['robot_pages_youtube_field']);
-		update_post_meta($postID, 'robot-youtube-meta', $youtube);
-	} else {
-		update_post_meta($postID, 'robot-youtube-meta', '');
-	}
-    
-    if (isset($_POST['robot_pages_icon_field']) && trim($_POST['robot_pages_icon_field'])) {
-		$icon = trim($_POST['robot_pages_icon_field']);
-		update_post_meta($postID, 'robot-icon-meta', $icon);
-	} else {
-		delete_post_meta($postID, 'robot-icon-meta');
-	}
+	// Robot media meta
+	robot_pages_write_meta($postID, 'robot-icon-meta', $_POST['robot_pages_icon_field'], null);
+	robot_pages_write_meta($postID, 'robot-robot-reveal-meta', $_POST['robot_pages_robot_reveal_field'], null);
 
-	if (isset($_POST['robot_pages_status_field']) && trim($_POST['robot_pages_status_field'])) {
-		$status = trim($_POST['robot_pages_status_field']);
-		update_post_meta($postID, 'robot-status-meta', $status);
-	} else {
-		update_post_meta($postID, 'robot-status-meta', 'disassembled');
-	}
+	// Robot info meta
+	robot_pages_write_meta($postID, 'robot-length-meta', $_POST['robot_pages_length_field'], null);
+	robot_pages_write_meta($postID, 'robot-width-meta', $_POST['robot_pages_width_field'], null);
+	robot_pages_write_meta($postID, 'robot-height-meta', $_POST['robot_pages_height_field'], null);
+	robot_pages_write_meta($postID, 'robot-weight-meta', $_POST['robot_pages_weight_field'], null);
+	robot_pages_write_meta($postID, 'robot-status-meta', $_POST['robot_pages_status_field'], null);
 }
 
 // Add actions and filters to hook functions into WordPress process
