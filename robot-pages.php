@@ -44,6 +44,7 @@ function set_custom_edit_robot_columns( $columns ) {
   $columns['title'] = __( 'Robot Name' );
   $columns['game'] = __( 'Game Name' );
   $columns['year'] = __( 'Year' );
+  $columns['status'] = __( 'Status' );
 
   $columns['date'] = $date;
 
@@ -64,6 +65,11 @@ function custom_robot_column( $column, $post_id ) {
 	case 'year' :
 		echo get_post_meta( $post_id, 'robot-year-meta', true );
 		break;
+
+	// display robot status
+	case 'status' :
+		echo ucfirst( get_post_meta( $post_id, 'robot-status-meta', true ) );
+		break;
   }
 }
 
@@ -73,6 +79,7 @@ function custom_robot_column( $column, $post_id ) {
 function set_custom_robot_sortable_columns( $columns ) {
 	$columns['game'] = 'game';
 	$columns['year'] = 'year';
+	$columns['status'] = 'status';
 
   return $columns;
 }
@@ -130,9 +137,10 @@ function robot_pages_admin_init() {
 // Add custom fields to the robot editor page
 // hook: admin_menu
 function robot_pages_create_custom_fields() {
-	add_meta_box('robot_season_meta', 'Season', 'render_robot_season_meta', 'robot', 'side');
+	add_meta_box('robot_season_meta', 'FIRST Season', 'render_robot_season_meta', 'robot', 'side');
 	add_meta_box('robot_youtube_meta', 'YouTube Video ID', 'render_robot_youtube_meta', 'robot', 'side');
-    add_meta_box('robot_icon_meta', 'Icon', 'render_robot_icon_meta', 'robot', 'side');
+	add_meta_box('robot_icon_meta', 'Icon', 'render_robot_icon_meta', 'robot', 'side');
+	add_meta_box('robot_info_meta', 'Robot Info', 'render_robot_info_meta', 'robot', 'normal');
 }
 
 // Render the robot year custom box
@@ -188,23 +196,53 @@ function render_robot_icon_meta($post) {
 	}
 }
 
+// Render the robot info custom box
+function render_robot_info_meta($post) {
+	wp_nonce_field('robot_pages_save_meta_boxes', 'robot_pages_robot_info_nonce');
+	$status = get_post_meta($post->ID, 'robot-status-meta', true);
+?>
+	<label for="robot_pages_status_field" class="prfx-row-title">
+		Current robot status.
+	</label>
+	<select name="robot_pages_status_field" id="robot_pages_status_field">
+		<option value="active" <?php selected( $status, 'active' ); ?>>Active</option>
+		<option value="showbot" <?php selected( $status, 'showbot' ); ?>>Showbot</option>
+		<option value="inactive" <?php selected( $status, 'inactive' ); ?>>Inactive</option>
+		<option value="disassembled" <?php selected( $status, 'disassembled' ); ?>>Disassembled</option>
+	</select>
+<?php
+}
+
+// Verifies nonce based on the assumption that the
+// action name was "robot_pages_save_meta_boxes"
+function robot_pages_verify_meta_nonce($nonce) {
+	return isset($_POST[$nonce]) && wp_verify_nonce($_POST[$nonce], 'robot_pages_save_meta_boxes');
+}
+
 // Save the robot's custom fields when the post is saved.
 // hook: save_post
 function robot_pages_save_custom_fields($postID, $post, $update) {
-    // Nonce helps to verify if the edit has not been made yet
+	// Nonce verification to make sure that the edit request came from
+	// a site editor and not some outside source.
     // This exists purely for security reasons
-	if (!isset($_POST['robot_pages_robot_season_nonce']) || !wp_verify_nonce($_POST['robot_pages_robot_season_nonce'], 'robot_pages_save_meta_boxes'))
+	if (!robot_pages_verify_meta_nonce('robot_pages_robot_season_nonce'))
 		return;
     
-	if (!isset($_POST['robot_pages_robot_youtube_nonce']) || !wp_verify_nonce($_POST['robot_pages_robot_youtube_nonce'], 'robot_pages_save_meta_boxes'))
+	if (!robot_pages_verify_meta_nonce('robot_pages_robot_youtube_nonce'))
 		return;
     
-    if (!isset($_POST['robot_pages_robot_icon_nonce']) || !wp_verify_nonce($_POST['robot_pages_robot_icon_nonce'], 'robot_pages_save_meta_boxes'))
+    if (!robot_pages_verify_meta_nonce('robot_pages_robot_icon_nonce'))
 		return;
-    
+	
+	if (!robot_pages_verify_meta_nonce('robot_pages_robot_info_nonce'))
+		return;
+    	
+
+	// Make sure the current user can even edit the page
 	if (!current_user_can('edit_page', $postID))
 		return;
-    
+	
+	// Make sure the edit is being done for robot pages only
 	if ($post->post_type !== 'robot')
 		return;
 
@@ -214,8 +252,7 @@ function robot_pages_save_custom_fields($postID, $post, $update) {
 		update_post_meta($postID, 'robot-year-meta', intval($year));
 	} else {
 		delete_post_meta($postID, 'robot-year-meta');
-	}
-    
+	}    
     
     if (isset($_POST['robot_pages_game_field']) && trim($_POST['robot_pages_game_field'])) {
 		$game = trim($_POST['robot_pages_game_field']);
@@ -236,6 +273,13 @@ function robot_pages_save_custom_fields($postID, $post, $update) {
 		update_post_meta($postID, 'robot-icon-meta', $icon);
 	} else {
 		delete_post_meta($postID, 'robot-icon-meta');
+	}
+
+	if (isset($_POST['robot_pages_status_field']) && trim($_POST['robot_pages_status_field'])) {
+		$status = trim($_POST['robot_pages_status_field']);
+		update_post_meta($postID, 'robot-status-meta', $status);
+	} else {
+		update_post_meta($postID, 'robot-status-meta', 'disassembled');
 	}
 }
 
