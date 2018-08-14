@@ -1,22 +1,28 @@
-apply plugin: 'java'
-apply plugin: 'com.github.fgiannesini.libsass.gradle.plugin'
-
 buildscript {
     repositories {
     	mavenLocal()
         mavenCentral()
     }
-    dependencies {
-        classpath 'com.github.fgiannesini.libsass.gradle.plugin:libsass-gradle-plugin:+'
-    }
 }
 
-libSassParameters {
-    inputFilePath = "sass/style.sass"
-    outputFilePath = "robot-pages.css"
-    watchedDirectoryPath = "sass"
-    sourceMapFilePath "style.css.map"
-    includePaths "sass/partials"
+plugins {
+    id 'java'
+    id 'com.moowork.gulp' version '1.2.0'
+}
+
+node {
+    version = '8.11.3'
+    download = true
+}
+
+installGulp.dependsOn 'npmInstall'
+
+task compileSass( type: GulpTask, dependsOn: installGulp ) {
+    args = ["sass"]
+}
+
+task watchSass( type: GulpTask, dependsOn: installGulp ) {
+    args = ["sass:watch"]
 }
 
 task wrapper(type: Wrapper) {

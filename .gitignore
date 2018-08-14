@@ -4,6 +4,10 @@
 .vscode/
 .sass-cache/
 
+# Ignore built CSS and CSS maps
+**/*.css
+**/*.css.map
+
 # Config stuff
 *.json
 
