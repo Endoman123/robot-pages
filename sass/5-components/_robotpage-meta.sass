@@ -1,7 +1,7 @@
 .robotpage-meta__container
     display: grid
-    grid-template-columns: 50% 50%
-    grid-gap: 1.5em 1em
+    grid-template-columns: 49% 49%
+    grid-gap: 1em 1%
 
 .robotpage-meta__section:not(:last-child)
     margin-bottom: 1.75em
@@ -12,3 +12,7 @@
 
 .robotpage-meta-section__tip
     margin: 0.5em 0
+
+@media only screen and (max-width: 768px)
+    .robotpage-meta__container
+        grid-template-columns: 100%
