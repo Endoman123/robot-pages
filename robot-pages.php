@@ -313,7 +313,7 @@ function robot_pages_save_custom_fields($postID, $post, $update) {
 	robot_pages_write_meta($postID, 'robot-width-meta', $_POST['robot_pages_width_field'], null);
 	robot_pages_write_meta($postID, 'robot-height-meta', $_POST['robot_pages_height_field'], null);
 	robot_pages_write_meta($postID, 'robot-weight-meta', $_POST['robot_pages_weight_field'], null);
-	robot_pages_write_meta($postID, 'robot-status-meta', $_POST['robot_pages_status_field'], null);
+	robot_pages_write_meta($postID, 'robot-status-meta', $_POST['robot_pages_status_field'], 'Active');
 }
 
 // Add actions and filters to hook functions into WordPress process
