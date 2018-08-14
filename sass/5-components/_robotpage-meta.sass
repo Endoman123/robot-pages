@@ -6,8 +6,7 @@
     &__section
         &--width--full
             grid-column: 1 / 1
-        &:not(:last-child)
-            margin-bottom: 1.75em
+        
     &__title
         font-weight: 600
         margin: 1em 0 0.5em
@@ -18,3 +17,7 @@
 @media only screen and (max-width: 768px)
     .robotpage-metabox
         grid-template-columns: 100%
+
+        &__section
+            &:not(:last-child)
+                margin-bottom: 1.75em
