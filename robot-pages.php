@@ -137,8 +137,7 @@ function robot_pages_admin_init() {
 // hook: admin_menu
 function robot_pages_create_custom_fields() {
 	add_meta_box('robot_season_meta', 'FIRST Season', 'render_robot_season_meta', 'robot', 'side');
-	add_meta_box('robot_youtube_meta', 'YouTube Video ID', 'render_robot_youtube_meta', 'robot', 'side');
-	add_meta_box('robot_icon_meta', 'Icon', 'render_robot_icon_meta', 'robot', 'side');
+	add_meta_box('robot_media_meta', 'Robot Media', 'render_robot_media_meta', 'robot', 'normal');
 	add_meta_box('robot_info_meta', 'Robot Info', 'render_robot_info_meta', 'robot', 'normal');
 }
 
@@ -147,75 +146,110 @@ function render_robot_season_meta($post) {
 	wp_nonce_field('robot_pages_save_meta_boxes', 'robot_pages_robot_season_nonce');
 	
 	$year = get_post_meta( $post->ID, 'robot-year-meta', true );
-    $game = get_post_meta( $post->ID, 'robot-game-meta', true );
+	$game = get_post_meta( $post->ID, 'robot-game-meta', true );
+	$seasonDesc = wpautop( get_post_meta( $post->ID, 'robot-season-meta', true ) );
 
 	?>
-		<label for="robot_pages_year_field">Season Year:</label>
-		<br>
-		<input type="text" id="robot_pages_year_field" name="robot_pages_year_field" value="<?php echo esc_attr( $year )?>" size="4" />
-        <br>
-        <br>
-        <label for="robot_pages_game_field">Season Name:</label>
-		<br>
-		<input type="text" id="robot_pages_game_field" name="robot_pages_game_field" value="<?php echo esc_attr( trim( $game ) )?>"/>
-		<br>
-		<label for="robot_season">Season Description:</label>
+		<div class="robotpage-meta__container">
+			<section class="robotpage-meta__section">
+				<p class="robotpage-meta-section__title">Season Year</p>
+				<p class="robotpage-meta-section__tip">Year of competition season.</p>
+				<input type="number" id="robot_pages_year_field" name="robot_pages_year_field" minlength="4" maxlength="4" size="4" min="2000" required value="<?php echo esc_attr( $year )?>"/>
+			</section>
+			<section class="robotpage-meta__section">
+				<p class="robotpage-meta-section__title">Season Name</p>
+				<p class="robotpage-meta-section__tip">Name of FRC game. Omit <i>FIRST</i>.</p>
+				<input type="number" id="robot_pages_game_field" name="robot_pages_game_field" required value="<?php echo esc_attr( trim( $game ) )?>"/>
+			</section>
+			<section class="robotpage-meta__section">
+				<p class="robotpage-meta-section__title">Game Reveal Video ID</p>
+				<p class="robotpage-meta-section__tip">Copy from YouTube video URL, after ".../watch?v="</p>
+				<input type="text" id="robot_pages_youtube_field" name="robot_pages_youtube_field" required value="<?php echo esc_attr( trim( $yt_val ) ) ?>"/>
+			</section>
+		</div>
 	<?php
-		wp_editor('', 'robot_season', array(
+		wp_editor($seasonDesc, 'robot_pages_season_field', array(
 			'media_buttons' => false,
 			'teeny' => true,
-			'textarea_rows' => 10
+			'textarea_rows' => 10,
+			'textarea_name' => 'robot_pages_season_field'
 		));
 }
 
-// Render the robot YouTube URL custom box
-function render_robot_youtube_meta($post) {
-	wp_nonce_field('robot_pages_save_meta_boxes', 'robot_pages_robot_youtube_nonce');
+// Render the robot media custom meta box
+function render_robot_media_meta($post) {
+	wp_nonce_field('robot_pages_save_meta_boxes', 'robot_pages_robot_media_nonce');
 	
 	$yt_val = get_post_meta( $post->ID, 'robot-youtube-meta', true );
 	$icon_val = get_post_meta( $post->ID, 'robot-icon-meta', true );
 
 	?>
 		<div class="robotpage-meta__container">
-		<section class="robotpage-meta__section">
-			<p class="robotpage-meta-section__title">Robot Reveal Video ID (Optional)</p>
-			<p class="robotpage-meta-section__tip">Copy from YouTube video URL, after ".../watch?v="</p>
-			<input type="text" id="robot_pages_youtube_field" name="robot_pages_youtube_field" value="<?php echo esc_attr( trim( $yt_val ) ) ?>"/>
-		</section>
+			<section class="robotpage-meta__section">
+				<p class="robotpage-meta-section__title">Robot Reveal Video ID (Optional)</p>
+				<p class="robotpage-meta-section__tip">Copy from YouTube video URL, after ".../watch?v="</p>
+				<input type="text" id="robot_pages_youtube_field" name="robot_pages_youtube_field" value="<?php echo esc_attr( trim( $yt_val ) ) ?>"/>
+			</section>
 	<?php if ( wp_script_is( 'meta-box-image', 'done' ) ) { ?>
-		<section class="robotpage-meta__section">
-			<p class="robotpage-meta-section__title">
-				Robot Icon (512x512)
-			</p>
-			<p class="robotpage-meta-section__tip">You can copy this URL from an uploaded media file</p>
-			<input type="text" id="robot_pages_icon_field" name="robot_pages_icon_field" value="<?php echo esc_attr( trim( $icon_val ) ) ?>"/>
-			<input type="button" id="robot_pages_icon_button" class="button" value="..."/>
-		</section>
+			<section class="robotpage-meta__section">
+				<p class="robotpage-meta-section__title">
+					Robot Icon (Optional)
+				</p>
+				<p class="robotpage-meta-section__tip">
+					Icon to display in robot archive. Optional, but recommended.<br>
+					For best results, look for 512×512 images.
+				</p>
+				<input type="text" id="robot_pages_icon_field" name="robot_pages_icon_field" value="<?php echo esc_attr( trim( $icon_val ) ) ?>"/>
+				<input type="button" id="robot_pages_icon_button" class="button" value="..."/>
+			</section>
 	<?php } ?>
 		</div>
 	<?php
-}
-
-// Render the robot icon custom box
-function render_robot_icon_meta($post) {
-	wp_nonce_field('robot_pages_save_meta_boxes', 'robot_pages_robot_icon_nonce');
-
 }
 
 // Render the robot info custom box
 function render_robot_info_meta($post) {
 	wp_nonce_field('robot_pages_save_meta_boxes', 'robot_pages_robot_info_nonce');
 	$status = get_post_meta($post->ID, 'robot-status-meta', true);
+	$length = get_post_meta($post->ID, 'robot-length-meta', true);
+	$width = get_post_meta($post->ID, 'robot-width-meta', true);
+	$height = get_post_meta($post->ID, 'robot-height-meta', true);
+	$weight = get_post_meta($post->ID, 'robot-weight-meta', true);
 ?>
-	<label for="robot_pages_status_field" class="prfx-row-title">
-		Current robot status.
-	</label>
-	<select name="robot_pages_status_field" id="robot_pages_status_field">
-		<option value="active" <?php selected( $status, 'active' ); ?>>Active</option>
-		<option value="showbot" <?php selected( $status, 'showbot' ); ?>>Showbot</option>
-		<option value="inactive" <?php selected( $status, 'inactive' ); ?>>Inactive</option>
-		<option value="disassembled" <?php selected( $status, 'disassembled' ); ?>>Disassembled</option>
-	</select>
+	<div class="robotpage-meta__container">
+		<section class="robotpage-meta__section">
+			<p class="robotpage-meta-section__title">Current Robot Status</p>
+			<p class="robotpage-meta-section__tip">
+				Active: Currently being used in competition, either in-season or off-season.<br>
+				Showbot: Only used in parades, team demos, etc.<br>
+				Inactive: In storage, but not disassembled.<br>
+				Disassembled: Taken apart, never to see the light of day ever again.
+			</p>
+			<select name="robot_pages_status_field" id="robot_pages_status_field">
+				<option value="active" <?php selected( $status, 'active' ); ?>>Active</option>
+				<option value="showbot" <?php selected( $status, 'showbot' ); ?>>Showbot</option>
+				<option value="inactive" <?php selected( $status, 'inactive' ); ?>>Inactive</option>
+				<option value="disassembled" <?php selected( $status, 'disassembled' ); ?>>Disassembled</option>
+			</select>
+		</section>
+		<section class="robotpage-meta__section">
+			<p class="robotpage-meta-section__title">Robot Dimensions</p>
+			<p class="robotpage-meta-section__tip">
+				Transport dimensions of robot, in inches, from bumper to bumper, and from the bottom of the drivetrain to the top of the robot.<br>
+				Max dimensions: 50" × 50" × 100"
+			</p>
+			<input type="number" id="robot_pages_length_field" name="robot_pages_length_field" maxlength="3" size="3" min="1" max="50" placeholder="L" required value="<?php echo esc_attr( trim( $length ) ) ?>"/>
+			×
+			<input type="number" id="robot_pages_width_field" name="robot_pages_width_field" maxlength="3" size="3"  min="1" max="50" placeholder="W" required value="<?php echo esc_attr( trim( $width ) ) ?>"/>
+			×
+			<input type="number" id="robot_pages_height_field" name="robot_pages_height_field" maxlength="3" size="3" min="1" max="100" placeholder="H" required value="<?php echo esc_attr( trim( $height ) ) ?>"/>
+		</section>
+		<section class="robotpage-meta__section">
+			<p class="robotpage-meta-section__title">Robot Weight</p>
+			<p class="robotpage-meta-section__tip">Weight of robot, in pounds, including bumpers.</p>
+			<input type="number" id="robot_pages_weight_field" name="robot_pages_weight_field" maxlength="3" size="3" min="1" max="200" required value="<?php echo esc_attr( trim( $weight ) ) ?>"> lbs.</input>
+		</section>
+	</div>
 <?php
 }
 
@@ -223,6 +257,19 @@ function render_robot_info_meta($post) {
 // action name was "robot_pages_save_meta_boxes"
 function robot_pages_verify_meta_nonce($nonce) {
 	return isset($_POST[$nonce]) && wp_verify_nonce($_POST[$nonce], 'robot_pages_save_meta_boxes');
+}
+
+// Write new value to meta key, or default if value is invalid
+function robot_pages_write_meta($key, $value, $default) {
+	if (isset($value) && trim($value)) {
+		$meta = trim($value);
+		update_post_meta($postID, $key, $meta);
+	} else {
+		if ($default === null)
+			delete_post_meta($postID, $key);
+		else
+			update_post_meta($postID, $key, $default);
+	}
 }
 
 // Save the robot's custom fields when the post is saved.
@@ -234,16 +281,12 @@ function robot_pages_save_custom_fields($postID, $post, $update) {
 	if (!robot_pages_verify_meta_nonce('robot_pages_robot_season_nonce'))
 		return;
     
-	if (!robot_pages_verify_meta_nonce('robot_pages_robot_youtube_nonce'))
-		return;
-    
-    if (!robot_pages_verify_meta_nonce('robot_pages_robot_icon_nonce'))
+	if (!robot_pages_verify_meta_nonce('robot_pages_robot_media_nonce'))
 		return;
 	
 	if (!robot_pages_verify_meta_nonce('robot_pages_robot_info_nonce'))
 		return;
     	
-
 	// Make sure the current user can even edit the page
 	if (!current_user_can('edit_page', $postID))
 		return;
