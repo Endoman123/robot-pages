@@ -167,14 +167,21 @@ function render_robot_season_meta($post) {
 				<p class="robotpage-metabox__tip">Copy from YouTube video URL, after ".../watch?v="</p>
 				<input type="text" id="robot_pages_game_reveal_field" name="robot_pages_game_reveal_field" required value="<?php echo esc_attr( trim( $reveal ) ) ?>"/>
 			</section>
+			<section class="robotpage-metabox__section robotpage-metabox__section--width--full">
+				<p class="robotpage-metabox__title">Season Description</p>
+				<p class="robotpage-metabox__tip">One paragraph describing this season's game, along with possible challenges, metas, etc.</p>
+				<?php
+					wp_editor($seasonDesc, 'robot_pages_season_desc_field', array(
+						'media_buttons' => false,
+						'teeny' => true,
+						'textarea_rows' => 10,
+						'textarea_name' => 'robot_pages_season_desc_field'
+					));
+				?>
+			</section>
 		</div>
 	<?php
-		wp_editor($seasonDesc, 'robot_pages_season_desc_field', array(
-			'media_buttons' => false,
-			'teeny' => true,
-			'textarea_rows' => 10,
-			'textarea_name' => 'robot_pages_season_desc_field'
-		));
+		
 }
 
 // Render the robot media custom meta box
