@@ -175,7 +175,11 @@ function render_robot_season_meta($post) {
 						'media_buttons' => false,
 						'teeny' => true,
 						'textarea_rows' => 10,
-						'textarea_name' => 'robot_pages_season_desc_field'
+						'textarea_name' => 'robot_pages_season_desc_field',
+						'tinymce' => array (
+							'toolbar1' => 'bold italic underline strikethrough | subscript superscript | undo redo | link',
+						),
+						'quicktags' => false
 					));
 				?>
 			</section>
@@ -224,6 +228,7 @@ function render_robot_info_meta($post) {
 	$width = get_post_meta($post->ID, 'robot-width-meta', true);
 	$height = get_post_meta($post->ID, 'robot-height-meta', true);
 	$weight = get_post_meta($post->ID, 'robot-weight-meta', true);
+	$features = wpautop( get_post_meta( $post->ID, 'robot-features-meta', true ) );
 ?>
 	<div class="robotpage-metabox">
 		<section class="robotpage-metabox__section">
@@ -258,6 +263,22 @@ function render_robot_info_meta($post) {
 			<p class="robotpage-metabox__tip">Weight of robot, in pounds, including bumpers.</p>
 			<input type="number" id="robot_pages_weight_field" name="robot_pages_weight_field" maxlength="3" size="3" min="1" max="200" required value="<?php echo esc_attr( trim( $weight ) ) ?>"> lbs.</input>
 		</section>
+		<section class="robotpage-metabox__section robotpage-metabox__section--width--full">
+				<p class="robotpage-metabox__title">Robot Features</p>
+				<p class="robotpage-metabox__tip">List of features and skills that the robot is capable of.</p>
+				<?php
+					wp_editor($features, 'robot_pages_features_field', array(
+						'media_buttons' => false,
+						'teeny' => true,
+						'textarea_rows' => 10,
+						'textarea_name' => 'robot_pages_features_field',
+						'tinymce' => array (
+							'toolbar1' => 'bold italic underline strikethrough | subscript superscript | bullist | undo redo | link',
+						),
+						'quicktags' => false
+					));
+				?>
+			</section>
 	</div>
 <?php
 }
@@ -321,6 +342,7 @@ function robot_pages_save_custom_fields($postID, $post, $update) {
 	robot_pages_write_meta($postID, 'robot-height-meta', $_POST['robot_pages_height_field'], null);
 	robot_pages_write_meta($postID, 'robot-weight-meta', $_POST['robot_pages_weight_field'], null);
 	robot_pages_write_meta($postID, 'robot-status-meta', $_POST['robot_pages_status_field'], 'Active');
+	robot_pages_write_meta($postID, 'robot-features-meta', $_POST['robot_pages_features_field'], null);
 }
 
 // Add actions and filters to hook functions into WordPress process
