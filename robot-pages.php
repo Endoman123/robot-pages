@@ -4,7 +4,7 @@
  * Description: This plugin adds a custom post type for robots and generates navigation.
  * Version: 2.0.0
  * Author: Tim Aveni, Jared Tulayan
- * License: X11
+ * License: MIT
  */
 
 function robot_pages_create_post_type() {
@@ -129,7 +129,7 @@ function enqueue_image_mgmt() {
 // Add the admin page stylesheet
 // hook: admin_init
 function robot_pages_admin_init() {
-	wp_register_style('robot-pages', plugins_url('/robot-pages.css', __FILE__), array(), '1.0.1');
+	wp_register_style('robot-pages', plugins_url('/robot-pages.css', __FILE__), array(), '2.0.0');
 	wp_enqueue_style('robot-pages');
 }
 
@@ -307,7 +307,7 @@ function robot_pages_write_meta(string $id, string $key, string $value, ?string 
 function robot_pages_save_custom_fields($postID, $post, $update) {
 	// Nonce verification to make sure that the edit request came from
 	// a site editor and not some outside source.
-    // This exists purely for security reasons
+    // This exists purely for security reasons, and should not be removed
 	if (!robot_pages_verify_meta_nonce('robot_pages_robot_season_nonce'))
 		return;
     
