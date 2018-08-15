@@ -7,11 +7,12 @@ jQuery(document).ready(function($) {
     var meta_image_frame;
  
     // Runs when the image button is clicked.
-    $('#robot_pages_icon_button').click(function(e){
- 
+    $('.button--meta-image').click(function(e) {
         // Prevents the default action from occuring.
         e.preventDefault();
  
+        console.log("this is fine");
+        
         // If the frame already exists, re-open it.
         if ( meta_image_frame ) {
             meta_image_frame.open();
@@ -32,7 +33,7 @@ jQuery(document).ready(function($) {
             var media_attachment = meta_image_frame.state().get('selection').first().toJSON();
  
             // Sends the attachment URL to our custom image input field.
-            $('#robot_pages_icon_field').val(media_attachment.url);
+            $(`input#${this.id}`).val(media_attachment.url);
         });
  
         // Opens the media library frame.
