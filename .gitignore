@@ -11,9 +11,10 @@
 # Config stuff
 *.json
 
-# Gradle
+# Build files
 .gradle/
 gradle/.launch/
+node_modules/
 
 # Easy uncheck via .*
 .*/
