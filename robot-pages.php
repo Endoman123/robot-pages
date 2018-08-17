@@ -194,16 +194,20 @@ function render_robot_media_meta($post) {
 	
 	$reveal = get_post_meta( $post->ID, 'robot-robot-reveal-meta', true );
 	$icon = get_post_meta( $post->ID, 'robot-icon-meta', true );
+	$img = get_post_meta( $post->ID, 'robot-img-meta', true );
 
 	?>
 		<div class="robotpage-metabox">
 			<section class="robotpage-metabox__section">
 				<p class="robotpage-metabox__title">Robot Reveal Video ID (Optional)</p>
-				<p class="robotpage-metabox__tip">Copy from YouTube video URL, after ".../watch?v="</p>
+				<p class="robotpage-metabox__tip">
+					Robot reveal YouTube video to showcase robot. Optional, but recommended.<br>
+					Copy from YouTube video URL, after ".../watch?v=."
+				</p>
 				<input type="text" id="robot_pages_robot_reveal_field" name="robot_pages_robot_reveal_field" value="<?php echo esc_attr( trim( $reveal ) ) ?>"/>
 			</section>
 	<?php if ( wp_script_is( 'meta-box-image', 'done' ) ) { ?>
-			<section class="robotpage-metabox__section">
+		<section class="robotpage-metabox__section">
 				<p class="robotpage-metabox__title">
 					Robot Icon (Optional)
 				</p>
@@ -212,7 +216,18 @@ function render_robot_media_meta($post) {
 					For best results, look for 512×512 images.
 				</p>
 				<input type="text" id="robot_pages_icon_field" name="robot_pages_icon_field" value="<?php echo esc_attr( trim( $icon ) ) ?>"/>
-				<input type="button" id="robot_pages_icon_button" class="button" value="..."/>
+				<input type="button" id="robot_pages_icon_field" class="button button--meta-image" value="..." />
+			</section>
+			<section class="robotpage-metabox__section">
+				<p class="robotpage-metabox__title">
+					Full Robot Image (Optional)
+				</p>
+				<p class="robotpage-metabox-section__tip">
+					Full image of robot to display on robot page. Optional, but recommended.<br>
+					For best results, find high-definition images (720p and up).
+				</p>
+				<input type="text" id="robot_pages_img_field" name="robot_pages_img_field" value="<?php echo esc_attr( trim( $icon ) ) ?>"/>
+				<input type="button" id="robot_pages_img_field" class="button button--meta-image" value="..." />
 			</section>
 	<?php } ?>
 		</div>
@@ -261,7 +276,7 @@ function render_robot_info_meta($post) {
 		<section class="robotpage-metabox__section">
 			<p class="robotpage-metabox__title">Robot Weight</p>
 			<p class="robotpage-metabox__tip">Weight of robot, in pounds, including bumpers.</p>
-			<input type="number" id="robot_pages_weight_field" name="robot_pages_weight_field" maxlength="3" size="3" min="1" max="200" required value="<?php echo esc_attr( trim( $weight ) ) ?>"> lbs.</input>
+			<input type="number" id="robot_pages_weight_field" name="robot_pages_weight_field" maxlength="3" size="3" min="1" max="200" required value="<?php echo esc_attr( trim( $weight ) ) ?>"/> lbs.
 		</section>
 		<section class="robotpage-metabox__section robotpage-metabox__section--width--full">
 				<p class="robotpage-metabox__title">Robot Features</p>
@@ -274,6 +289,28 @@ function render_robot_info_meta($post) {
 						'textarea_name' => 'robot_pages_features_field',
 						'tinymce' => array (
 							'toolbar1' => 'bold italic underline strikethrough | subscript superscript | bullist | undo redo | link',
+							"plugins" => "link, paste",
+							"paste_as_text" => true,
+							"setup" => "function (editor) {
+								function isValid() {
+									return tinymce.activeEditor.dom.getParent(tinyMCE.activeEditor.selection.getNode(), 'li') != null ||
+									tinyMCE.activeEditor.selection.getNode().nodeName.toLowerCase() == 'li';
+								}
+
+								editor.on(\"ready\", function() {
+									if (!isValid()) {
+										editor.execCommand('InsertUnorderedList');
+									}
+								});
+								// This forces all 'enter' and 'backspace' keys to create an 'ol li' element
+								editor.on('keyup', function(e) {
+									if (e.keyCode == 13 || e.keyCode == 8){
+										if (!isValid()) {
+											editor.execCommand('InsertUnorderedList');
+										}
+									}
+								});
+							}"
 						),
 						'quicktags' => false
 					));
@@ -334,6 +371,7 @@ function robot_pages_save_custom_fields($postID, $post, $update) {
 
 	// Robot media meta
 	robot_pages_write_meta($postID, 'robot-icon-meta', $_POST['robot_pages_icon_field'], null);
+	robot_pages_write_meta($postID, 'robot-img-meta', $_POST['robot_pages_img_field'], null);
 	robot_pages_write_meta($postID, 'robot-robot-reveal-meta', $_POST['robot_pages_robot_reveal_field'], null);
 
 	// Robot info meta
@@ -342,7 +380,7 @@ function robot_pages_save_custom_fields($postID, $post, $update) {
 	robot_pages_write_meta($postID, 'robot-height-meta', $_POST['robot_pages_height_field'], null);
 	robot_pages_write_meta($postID, 'robot-weight-meta', $_POST['robot_pages_weight_field'], null);
 	robot_pages_write_meta($postID, 'robot-status-meta', $_POST['robot_pages_status_field'], 'Active');
-	robot_pages_write_meta($postID, 'robot-features-meta', $_POST['robot_pages_features_field'], null);
+	robot_pages_write_meta($postID, 'robot-features-meta', $_POST['robot_pages_features_field'], '<ul></ul>');
 }
 
 // Add actions and filters to hook functions into WordPress process
