@@ -11,8 +11,14 @@
  * @subpackage Robot_Pages/admin/partials
  */
 
-// Render the robot year custom box
-function render_robot_season_meta($post) {
+/**
+ * Render the robot year custom box
+ *
+ * @param WP_Post $post
+ * @param array|null $args
+ * @return void
+ */
+function render_robot_season_meta( $post, $args ) {
     wp_nonce_field('robot_pages_save_meta_boxes', 'robot_pages_robot_season_nonce');
     
     $year = get_post_meta( $post->ID, 'robot-year-meta', true );
@@ -50,14 +56,22 @@ function render_robot_season_meta($post) {
     <?php	
 }
 
-// Render the robot media custom meta box
-function render_robot_media_meta($post) {
+/**
+ * Render the robot media custom meta box
+ *
+ * @param WP_Post $post
+ * @param array|null $args
+ * @return void
+ */
+function render_robot_media_meta( $post, $args ) {
     wp_nonce_field('robot_pages_save_meta_boxes', 'robot_pages_robot_media_nonce');
     
     $robotReveal = get_post_meta( $post->ID, 'robot-robot-reveal-meta', true );
     $gameReveal = get_post_meta( $post->ID, 'robot-game-reveal-meta', true );
     $icon = get_post_meta( $post->ID, 'robot-icon-meta', true );
     $img = get_post_meta( $post->ID, 'robot-img-meta', true );
+
+    $scriptName = $args['args']['plugin_name'] . '-admin-js';
 ?>
         <div class="robotpage-metabox">
             <section class="robotpage-metabox__section">
@@ -73,11 +87,9 @@ function render_robot_media_meta($post) {
                 <p class="robotpage-metabox__tip">Copy from YouTube video URL, after ".../watch?v="</p>
                 <input type="text" id="robot_pages_game_reveal_field" name="robot_pages_game_reveal_field" required value="<?php echo esc_attr( trim( $reveal ) ) ?>"/>
             </section>
-    <?php if ( wp_script_is('robot-pages-admin-js', 'done') ) { ?>
+    <?php if ( wp_script_is( $scriptName, 'done' ) ) { ?>
         <section class="robotpage-metabox__section">
-                <p class="robotpage-metabox__title">
-                    Robot Icon (Optional)
-                </p>
+                <p class="robotpage-metabox__title">Robot Icon (Optional)</p>
                 <p class="robotpage-metabox-section__tip">
                     Icon to display in robot archive. Optional, but recommended.<br>
                     For best results, look for 512×512 images.
@@ -101,8 +113,14 @@ function render_robot_media_meta($post) {
     <?php
 }
 
-// Render the robot info custom box
-function render_robot_info_meta($post) {
+/**
+ * Render the robot info custom box
+ *
+ * @param WP_Post $post
+ * @param array|null $args
+ * @return void
+ */
+function render_robot_info_meta( $post, $args ) {
     wp_nonce_field('robot_pages_save_meta_boxes', 'robot_pages_robot_info_nonce');
 
     $status = get_post_meta($post->ID, 'robot-status-meta', true);

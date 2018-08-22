@@ -114,9 +114,44 @@ class Robot_Pages_Admin {
 	 * @return void
 	 */
 	public function robot_pages_admin_menu() {
-		add_meta_box('robot_season_meta', 'FIRST Season', 'render_robot_season_meta', 'robot', 'side');
-		add_meta_box('robot_media_meta', 'Robot Media', 'render_robot_media_meta', 'robot', 'normal');
-		add_meta_box('robot_info_meta', 'Robot Info', 'render_robot_info_meta', 'robot', 'normal');
+		add_meta_box(
+			'robot_season_meta', 
+			'FIRST Season', 
+			'render_robot_season_meta', 
+			'robot', 
+			'side',
+			'high',
+			array(
+				'plugin_name' => $this->plugin_name,
+				'version' => $this->version
+			)
+		);
+		
+		add_meta_box(
+			'robot_media_meta', 
+			'Robot Media', 
+			'render_robot_media_meta', 
+			'robot', 
+			'normal',
+			'high',
+			array(
+				'plugin_name' => $this->plugin_name,
+				'version' => $this->version
+			)
+		);
+		
+		add_meta_box(
+			'robot_info_meta', 
+			'Robot Info', 
+			'render_robot_info_meta', 
+			'robot', 
+			'normal',
+			'high',
+			array(
+				'plugin_name' => $this->plugin_name,
+				'version' => $this->version
+			)
+		);
 	}
 
 	/**
