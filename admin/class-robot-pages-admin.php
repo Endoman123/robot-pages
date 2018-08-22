@@ -75,8 +75,11 @@ class Robot_Pages_Admin {
 	 * @since    2.0.0
 	 */
 	public function enqueue_styles() {
-
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/robot-pages-admin.css', array(), $this->version, 'all' );
+		global $typenow;
+		
+		if  ( $typenow === 'robot' ) {
+			wp_enqueue_style( $this->plugin_name . '-admin-css' , plugin_dir_url( __FILE__ ) . 'css/robot-pages-admin.css', array(), $this->version, 'all' );
+		}
 	}
 
 	/**
@@ -85,16 +88,22 @@ class Robot_Pages_Admin {
 	 * @since    2.0.0
 	 */
 	public function enqueue_scripts() {
-		wp_enqueue_media();
-		// Registers and enqueues the required javascript.
-		wp_register_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/robot-pages-admin.js', array( 'jquery' ), $this->version, false );
-		wp_localize_script( $this->plugin_name, 'meta_image',
-			array(
-				'title' => 'Choose or Upload an Image',
-				'button' => 'Use this image',
-			)
-		);
-		wp_enqueue_script( $this->plugin_name );
+		global $typenow;
+
+		$handle = $this->plugin_name . '-admin-js';
+
+		if  ( $typenow === 'robot' ) {
+			wp_enqueue_media();
+			// Registers and enqueues the required javascript.
+			wp_register_script( $handle, plugin_dir_url( __FILE__ ) . 'js/robot-pages-admin.js', array( 'jquery' ), $this->version, false );
+			wp_localize_script( $handle, 'meta_image',
+				array(
+					'title' => 'Choose or Upload an Image',
+					'button' => 'Use this image',
+				)
+			);
+			wp_enqueue_script( $handle );
+		}
 	}
 
 	/**

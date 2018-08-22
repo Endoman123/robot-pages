@@ -73,6 +73,7 @@ function render_robot_media_meta($post) {
                 <p class="robotpage-metabox__tip">Copy from YouTube video URL, after ".../watch?v="</p>
                 <input type="text" id="robot_pages_game_reveal_field" name="robot_pages_game_reveal_field" required value="<?php echo esc_attr( trim( $reveal ) ) ?>"/>
             </section>
+    <?php if ( wp_script_is('robot-pages-admin-js', 'done') ) { ?>
         <section class="robotpage-metabox__section">
                 <p class="robotpage-metabox__title">
                     Robot Icon (Optional)
@@ -95,6 +96,7 @@ function render_robot_media_meta($post) {
                 <input type="text" id="robot_pages_img_field" name="robot_pages_img_field" value="<?php echo esc_attr( trim( $icon ) ) ?>"/>
                 <input type="button" id="robot_pages_img_field" class="button button--meta-image" value="..." />
             </section>
+    <?php } ?>
         </div>
     <?php
 }
