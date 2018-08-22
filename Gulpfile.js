@@ -13,12 +13,12 @@ gulp.task('sass', function () {
     cssnano
   ];
 
-  return gulp.src('./sass/robot-pages.sass')
+  return gulp.src('./admin/css/sass/robot-pages.sass')
         .pipe(sourcemaps.init())
         .pipe(sass().on('error', sass.logError))
         .pipe(postcss(processors))
         .pipe(sourcemaps.write())
-        .pipe(gulp.dest('./'));
+        .pipe(gulp.dest('./admin/css/'));
 });
 
 gulp.task('sass:watch', function() {
