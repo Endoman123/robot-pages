@@ -10,13 +10,13 @@
  * @package    Robot_Pages
  * @subpackage Robot_Pages/admin/partials
  */
+
 // Render the robot year custom box
 function render_robot_season_meta($post) {
     wp_nonce_field('robot_pages_save_meta_boxes', 'robot_pages_robot_season_nonce');
     
     $year = get_post_meta( $post->ID, 'robot-year-meta', true );
     $game = get_post_meta( $post->ID, 'robot-game-meta', true );
-    $reveal = get_post_meta( $post->ID, 'robot-game-reveal-meta', true );
     $seasonDesc = wpautop( get_post_meta( $post->ID, 'robot-season-desc-meta', true ) );
 ?>
         <div class="robotpage-metabox">
@@ -29,11 +29,6 @@ function render_robot_season_meta($post) {
                 <p class="robotpage-metabox__title">Season Name</p>
                 <p class="robotpage-metabox__tip">Name of FRC game. Omit <i>FIRST</i>.</p>
                 <input type="text" id="robot_pages_game_field" name="robot_pages_game_field" required value="<?php echo esc_attr( trim( $game ) )?>"/>
-            </section>
-            <section class="robotpage-metabox__section">
-                <p class="robotpage-metabox__title">Game Reveal Video ID</p>
-                <p class="robotpage-metabox__tip">Copy from YouTube video URL, after ".../watch?v="</p>
-                <input type="text" id="robot_pages_game_reveal_field" name="robot_pages_game_reveal_field" required value="<?php echo esc_attr( trim( $reveal ) ) ?>"/>
             </section>
             <section class="robotpage-metabox__section robotpage-metabox__section--width--full">
                 <p class="robotpage-metabox__title">Season Description</p>
@@ -59,7 +54,8 @@ function render_robot_season_meta($post) {
 function render_robot_media_meta($post) {
     wp_nonce_field('robot_pages_save_meta_boxes', 'robot_pages_robot_media_nonce');
     
-    $reveal = get_post_meta( $post->ID, 'robot-robot-reveal-meta', true );
+    $robotReveal = get_post_meta( $post->ID, 'robot-robot-reveal-meta', true );
+    $gameReveal = get_post_meta( $post->ID, 'robot-game-reveal-meta', true );
     $icon = get_post_meta( $post->ID, 'robot-icon-meta', true );
     $img = get_post_meta( $post->ID, 'robot-img-meta', true );
 ?>
@@ -72,7 +68,11 @@ function render_robot_media_meta($post) {
                 </p>
                 <input type="text" id="robot_pages_robot_reveal_field" name="robot_pages_robot_reveal_field" value="<?php echo esc_attr( trim( $reveal ) ) ?>"/>
             </section>
-    <?php if ( wp_script_is( 'meta-box-image', 'done' ) ) { ?>
+            <section class="robotpage-metabox__section">
+                <p class="robotpage-metabox__title">Game Reveal Video ID</p>
+                <p class="robotpage-metabox__tip">Copy from YouTube video URL, after ".../watch?v="</p>
+                <input type="text" id="robot_pages_game_reveal_field" name="robot_pages_game_reveal_field" required value="<?php echo esc_attr( trim( $reveal ) ) ?>"/>
+            </section>
         <section class="robotpage-metabox__section">
                 <p class="robotpage-metabox__title">
                     Robot Icon (Optional)
@@ -95,7 +95,6 @@ function render_robot_media_meta($post) {
                 <input type="text" id="robot_pages_img_field" name="robot_pages_img_field" value="<?php echo esc_attr( trim( $icon ) ) ?>"/>
                 <input type="button" id="robot_pages_img_field" class="button button--meta-image" value="..." />
             </section>
-    <?php } ?>
         </div>
     <?php
 }

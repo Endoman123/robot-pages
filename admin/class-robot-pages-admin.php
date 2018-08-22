@@ -66,34 +66,17 @@ class Robot_Pages_Admin {
 	 * @access   private
 	 */
 	private function load_partials() {
-		/**
-		 * The class responsible for orchestrating the actions and filters of the
-		 * core plugin.
-		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/robot-pages-admin-metaboxes.php';
 	}
 
 	/**
 	 * Register the stylesheets for the admin area.
 	 *
-	 * @since    1.0.0
+	 * @since    2.0.0
 	 */
 	public function enqueue_styles() {
 
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Robot_Pages_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Robot_Pages_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
-
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/robot-pages-admin.css', array(), $this->version, 'all' );
-
 	}
 
 	/**
@@ -102,18 +85,16 @@ class Robot_Pages_Admin {
 	 * @since    2.0.0
 	 */
 	public function enqueue_scripts() {
-		if ( $typenow == 'robot' ) {
-			wp_enqueue_media();
-			// Registers and enqueues the required javascript.
-			wp_register_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/robot-pages-admin.js', array( 'jquery' ), $this->version, false );
-			wp_localize_script( $this->plugin_name, 'meta_image',
-				array(
-					'title' => 'Choose or Upload an Image',
-					'button' => 'Use this image',
-				)
-			);
-			wp_enqueue_script( $this->plugin_name );
-		}
+		wp_enqueue_media();
+		// Registers and enqueues the required javascript.
+		wp_register_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/robot-pages-admin.js', array( 'jquery' ), $this->version, false );
+		wp_localize_script( $this->plugin_name, 'meta_image',
+			array(
+				'title' => 'Choose or Upload an Image',
+				'button' => 'Use this image',
+			)
+		);
+		wp_enqueue_script( $this->plugin_name );
 	}
 
 	/**
@@ -195,13 +176,13 @@ class Robot_Pages_Admin {
 		// Season meta
 		robot_pages_write_meta($postID, 'robot-year-meta', $_POST['robot_pages_year_field'], null);
 		robot_pages_write_meta($postID, 'robot-game-meta', $_POST['robot_pages_game_field'], null);
-		robot_pages_write_meta($postID, 'robot-game-reveal-meta', $_POST['robot_pages_game_reveal_field'], null);
 		robot_pages_write_meta($postID, 'robot-season-desc-meta', $_POST['robot_pages_season_desc_field'], null);   
 		
 		// Robot media meta
 		robot_pages_write_meta($postID, 'robot-icon-meta', $_POST['robot_pages_icon_field'], null);
 		robot_pages_write_meta($postID, 'robot-img-meta', $_POST['robot_pages_img_field'], null);
 		robot_pages_write_meta($postID, 'robot-robot-reveal-meta', $_POST['robot_pages_robot_reveal_field'], null);
+		robot_pages_write_meta($postID, 'robot-game-reveal-meta', $_POST['robot_pages_game_reveal_field'], null);
 		
 		// Robot info meta
 		robot_pages_write_meta($postID, 'robot-length-meta', $_POST['robot_pages_length_field'], null);
