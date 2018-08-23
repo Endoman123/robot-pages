@@ -80,12 +80,12 @@ function render_robot_media_meta( $post, $args ) {
                     Robot reveal YouTube video to showcase robot. Optional, but recommended.<br>
                     Copy from YouTube video URL, after ".../watch?v=."
                 </p>
-                <input type="text" id="robot_pages_robot_reveal_field" name="robot_pages_robot_reveal_field" value="<?php echo esc_attr( trim( $reveal ) ) ?>"/>
+                <input type="text" id="robot_pages_robot_reveal_field" name="robot_pages_robot_reveal_field" value="<?php echo esc_attr( trim( $robotReveal ) ) ?>"/>
             </section>
             <section class="robotpage-metabox__section">
                 <p class="robotpage-metabox__title">Game Reveal Video ID</p>
                 <p class="robotpage-metabox__tip">Copy from YouTube video URL, after ".../watch?v="</p>
-                <input type="text" id="robot_pages_game_reveal_field" name="robot_pages_game_reveal_field" required value="<?php echo esc_attr( trim( $reveal ) ) ?>"/>
+                <input type="text" id="robot_pages_game_reveal_field" name="robot_pages_game_reveal_field" required value="<?php echo esc_attr( trim( $gameReveal ) ) ?>"/>
             </section>
     <?php if ( wp_script_is( $scriptName, 'done' ) ) { ?>
         <section class="robotpage-metabox__section">
