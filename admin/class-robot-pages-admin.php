@@ -198,13 +198,13 @@ class Robot_Pages_Admin {
 		// Nonce verification to make sure that the edit request came from
 		// a site editor and not some outside source.
 		// This exists purely for security reasons, and should not be removed
-		if (!robot_pages_verify_meta_nonce('robot_pages_robot_season_nonce'))
+		if (!$this->robot_pages_verify_meta_nonce('robot_pages_robot_season_nonce'))
 			return;
 		
-		if (!robot_pages_verify_meta_nonce('robot_pages_robot_media_nonce'))
+		if (!$this->robot_pages_verify_meta_nonce('robot_pages_robot_media_nonce'))
 			return;
 		
-		if (!robot_pages_verify_meta_nonce('robot_pages_robot_info_nonce'))
+		if (!$this->robot_pages_verify_meta_nonce('robot_pages_robot_info_nonce'))
 			return;
 			
 		// Make sure the current user can even edit the page
@@ -218,23 +218,23 @@ class Robot_Pages_Admin {
 		// Update post meta
 		
 		// Season meta
-		robot_pages_write_meta($postID, 'robot-year-meta', $_POST['robot_pages_year_field'], null);
-		robot_pages_write_meta($postID, 'robot-game-meta', $_POST['robot_pages_game_field'], null);
-		robot_pages_write_meta($postID, 'robot-season-desc-meta', $_POST['robot_pages_season_desc_field'], null);   
+		$this->robot_pages_write_meta($postID, 'robot-year-meta', $_POST['robot_pages_year_field'], null);
+		$this->robot_pages_write_meta($postID, 'robot-game-meta', $_POST['robot_pages_game_field'], null);
+		$this->robot_pages_write_meta($postID, 'robot-season-desc-meta', $_POST['robot_pages_season_desc_field'], null);   
 		
 		// Robot media meta
-		robot_pages_write_meta($postID, 'robot-icon-meta', $_POST['robot_pages_icon_field'], null);
-		robot_pages_write_meta($postID, 'robot-img-meta', $_POST['robot_pages_img_field'], null);
-		robot_pages_write_meta($postID, 'robot-robot-reveal-meta', $_POST['robot_pages_robot_reveal_field'], null);
-		robot_pages_write_meta($postID, 'robot-game-reveal-meta', $_POST['robot_pages_game_reveal_field'], null);
+		$this->robot_pages_write_meta($postID, 'robot-icon-meta', $_POST['robot_pages_icon_field'], null);
+		$this->robot_pages_write_meta($postID, 'robot-img-meta', $_POST['robot_pages_img_field'], null);
+		$this->robot_pages_write_meta($postID, 'robot-robot-reveal-meta', $_POST['robot_pages_robot_reveal_field'], null);
+		$this->robot_pages_write_meta($postID, 'robot-game-reveal-meta', $_POST['robot_pages_game_reveal_field'], null);
 		
 		// Robot info meta
-		robot_pages_write_meta($postID, 'robot-length-meta', $_POST['robot_pages_length_field'], null);
-		robot_pages_write_meta($postID, 'robot-width-meta', $_POST['robot_pages_width_field'], null);
-		robot_pages_write_meta($postID, 'robot-height-meta', $_POST['robot_pages_height_field'], null);
-		robot_pages_write_meta($postID, 'robot-weight-meta', $_POST['robot_pages_weight_field'], null);
-		robot_pages_write_meta($postID, 'robot-status-meta', $_POST['robot_pages_status_field'], 'Active');
-		robot_pages_write_meta($postID, 'robot-features-meta', $_POST['robot_pages_features_field'], '<ul></ul>');
+		$this->robot_pages_write_meta($postID, 'robot-length-meta', $_POST['robot_pages_length_field'], null);
+		$this->robot_pages_write_meta($postID, 'robot-width-meta', $_POST['robot_pages_width_field'], null);
+		$this->robot_pages_write_meta($postID, 'robot-height-meta', $_POST['robot_pages_height_field'], null);
+		$this->robot_pages_write_meta($postID, 'robot-weight-meta', $_POST['robot_pages_weight_field'], null);
+		$this->robot_pages_write_meta($postID, 'robot-status-meta', $_POST['robot_pages_status_field'], 'Active');
+		$this->robot_pages_write_meta($postID, 'robot-features-meta', $_POST['robot_pages_features_field'], '<ul></ul>');
 	}
 
 	/**
