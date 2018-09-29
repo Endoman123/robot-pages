@@ -1,3 +1,6 @@
+import java.nio.file.Files
+import java.nio.file.Path
+
 buildscript {
     repositories {
     	mavenLocal()
@@ -6,7 +9,7 @@ buildscript {
 }
 
 plugins {
-    id 'java'
+	id 'distribution'
     id 'com.moowork.gulp' version '1.2.0'
 }
 
@@ -25,7 +28,55 @@ task watchSass( type: GulpTask, dependsOn: installGulp ) {
     args = ["sass:watch"]
 }
 
+// Broken symlink workaround
+ext.deleteInvalidSymLinks = {dir ->
+	println ("deleting bad links in $dir")
+	Files.walk(dir.toPath())
+	.filter { it -> 
+		logger.debug("file: " + it + ", symLink?:" + Files.isSymbolicLink(it))
+		def isInvalidLink = Files.isSymbolicLink(it) && !Files.exists(it)
+		return isInvalidLink;
+	 }
+	.forEach{ it ->
+		try {
+			logger.warn("Deleting broken symlink '$it'")
+			Files.delete(it)
+		} catch (Exception e) {
+			logger.error("Couldn't delete broken symlink '$it' : $e ")
+		}
+	}
+}
+
+nodeSetup.doFirst {
+	deleteInvalidSymLinks(project.file('.gradle/nodejs'))
+}
+
+buildDir = '.build'
+
 build.dependsOn 'compileSass'
+distZip.dependsOn 'compileSass'
+
+distributions {
+    main {
+        baseName = 'robot-pages'
+        contents {
+			from('./') {
+				exclude 'node_modules'
+				exclude '*.js'
+				exclude '**/.*'
+				exclude 'sass'
+				exclude '**/gradle*'
+
+				include 'style.css'
+				
+				include '**/*.php'
+				include '**/*.js'
+				include '**/*.png'
+				include '**/*.jp*g'
+			}
+        }
+    }
+}
 
 task wrapper(type: Wrapper) {
     gradleVersion = '4.7'
