@@ -25,6 +25,8 @@ task watchSass( type: GulpTask, dependsOn: installGulp ) {
     args = ["sass:watch"]
 }
 
+build.dependsOn 'compileSass'
+
 task wrapper(type: Wrapper) {
     gradleVersion = '4.7'
 }
