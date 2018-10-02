@@ -172,6 +172,7 @@ function render_robot_info_meta( $post, $args ) {
                         'teeny' => true,
                         'textarea_rows' => 10,
                         'textarea_name' => 'robot_pages_features_field',
+                        'max_chars' => 1000,
                         'tinymce' => array (
                             'toolbar1' => 'bold italic underline strikethrough | subscript superscript | bullist | undo redo | link',
                             "plugins" => "link, paste",
