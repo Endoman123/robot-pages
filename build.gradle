@@ -54,28 +54,26 @@ nodeSetup.doFirst {
 buildDir = '.build'
 
 build.dependsOn 'compileSass'
-distZip.dependsOn 'compileSass'
 
-distributions {
-    main {
-        baseName = 'robot-pages'
-        contents {
-			from('./') {
-				exclude 'node_modules'
-				exclude '*.js'
-				exclude '**/.*'
-				exclude 'sass'
-				exclude '**/gradle*'
+task pack(type: Zip, dependsOn: 'compileSass') {
+	baseName = "mercurypress"
+	extension = "zip"
 
-				include 'style.css'
-				
-				include '**/*.php'
-				include '**/*.js'
-				include '**/*.png'
-				include '**/*.jp*g'
-			}
-        }
-    }
+	from('./') {
+		exclude 'node_modules'
+		exclude '*.js'
+		exclude '**/.*'
+		exclude 'sass'
+		exclude '**/gradle*'
+
+		include 'style.css'
+		
+		include '**/*.php'
+		include '**/*.js'
+		include '**/*.png'
+		include '**/*.jp*g'
+	} 
+	into ('')
 }
 
 task wrapper(type: Wrapper) {
