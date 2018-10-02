@@ -173,7 +173,7 @@ class Robot_Pages_Admin {
 	 * @param string|null $default
 	 * @return void
 	 */
-	private function robot_pages_write_meta(string $id, string $key, string $value, ?string $default) {
+	private function robot_pages_write_meta(string $id, string $key, string $value, string $default = null) {
 		if (isset($value) && trim($value)) {
 			$meta = trim($value);
 			update_post_meta($id, $key, $meta);
