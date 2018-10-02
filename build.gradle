@@ -56,7 +56,7 @@ buildDir = '.build'
 build.dependsOn 'compileSass'
 
 task pack(type: Zip, dependsOn: 'compileSass') {
-	baseName = "mercurypress"
+	baseName = "robot-pages"
 	extension = "zip"
 
 	from('./') {
