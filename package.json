@@ -5,9 +5,9 @@
   "main": "Gulpfile.js",
   "dependencies": {
     "autoprefixer": "^9.0.1",
-    "cssnano": "^4.0.4",
+    "cssnano": "^4.1.11",
     "gulp": "^3.9.1",
-    "gulp-postcss": "^7.0.1",
+    "gulp-postcss": "^9.0.1",
     "gulp-sass": "^4.0.1",
     "gulp-sourcemaps": "^2.6.4"
   },
